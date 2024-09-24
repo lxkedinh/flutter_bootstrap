@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bootstrap/todo_list_page.dart';
+import 'package:flutter_bootstrap/todo_list/todo_list_model.dart';
+import 'package:flutter_bootstrap/todo_list/todo_list_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => TodoListModel(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -32,7 +39,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
         useMaterial3: true,
       ),
-      home: const TodoListPage(),
+      home: const TodoListScreen(),
     );
   }
 }
