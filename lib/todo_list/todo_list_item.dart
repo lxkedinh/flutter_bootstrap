@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bootstrap/todo_list/todo_list_model.dart';
+import 'package:flutter_bootstrap/todo_list/edit_todo_screen.dart';
+import 'package:flutter_bootstrap/todo_list/todo_list_provider.dart';
 import 'package:provider/provider.dart';
 
 class TodoListItem extends StatefulWidget {
-  final String title;
+  final String task;
 
-  const TodoListItem({super.key, required this.title});
+  const TodoListItem({super.key, required this.task});
 
   @override
   State<StatefulWidget> createState() => _TodoListItemState();
@@ -18,31 +19,37 @@ class _TodoListItemState extends State<TodoListItem> {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
+        Checkbox(
+          value: _completed,
+          onChanged: (bool? value) {
+            setState(() => _completed = value!);
+            Provider.of<TodoListProvider>(context, listen: false)
+                .delete(widget.task);
+          },
+        ),
         Expanded(
-          child: CheckboxListTile(
-            value: _completed,
-            title: Text(
-              widget.title,
-              style: _completed
-                  ? const TextStyle(
-                      decoration: TextDecoration.lineThrough,
-                      color: Colors.black45,
-                      decorationColor: Colors.black45)
-                  : const TextStyle(decoration: TextDecoration.none),
-            ),
-            onChanged: (bool? value) {
-              setState(() => _completed = value!);
-            },
-            controlAffinity: ListTileControlAffinity.leading,
+          child: Text(
+            widget.task,
+            style: _completed
+                ? const TextStyle(
+                    decoration: TextDecoration.lineThrough,
+                    color: Colors.black45,
+                    decorationColor: Colors.black45)
+                : const TextStyle(decoration: TextDecoration.none),
           ),
         ),
-        IconButton(
-            onPressed: () => Provider.of<TodoListModel>(context, listen: false)
-                .delete(widget.title),
-            icon: const Icon(
-              Icons.delete,
-              color: Colors.red,
-            ))
+        Container(
+          margin: const EdgeInsets.only(right: 10.0),
+          child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            EditTodoScreen(todo: widget.task)));
+              },
+              icon: const Icon(Icons.edit)),
+        )
       ],
     );
   }
