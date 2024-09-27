@@ -33,12 +33,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> signOut() async {
-    try {
-      await _auth.signOut();
-    } on Exception catch (e) {
-      print("COULD NOT SIGN OUT");
-      print(e);
-    }
+    await _auth.signOut();
     notifyListeners();
   }
 }

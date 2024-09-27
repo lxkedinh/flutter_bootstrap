@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bootstrap/auth/auth_provider.dart';
+import 'package:flutter_bootstrap/dialogs.dart';
 import 'package:flutter_bootstrap/todo_list/todo_list_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -25,9 +26,15 @@ class _TodoListScreenState extends State<TodoListScreen> {
               child: Container(
                 margin: const EdgeInsets.only(top: 40.0),
                 child: TextButton(
-                  onPressed: () =>
+                  onPressed: () {
+                    try {
                       Provider.of<AuthProvider>(context, listen: false)
-                          .signOut(),
+                          .signOut();
+                    } catch (e) {
+                      showAlertDialog(
+                          context, "Could not sign out. Try again.");
+                    }
+                  },
                   style: TextButton.styleFrom(
                       foregroundColor: Theme.of(context).colorScheme.error),
                   child: const Text("Sign Out"),
