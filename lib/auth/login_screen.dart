@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_bootstrap/auth/auth_provider.dart';
@@ -122,10 +124,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (e.code == "user-not-found" && context.mounted) {
                             showAlertDialog(context,
                                 "There is no account with that email.");
-                          } else if (e.code == "wrong-password" &&
+                          } else if ((e.code == "wrong-password" ||
+                                  e.code == "invalid-credential") &&
                               context.mounted) {
-                            showAlertDialog(
-                                context, "Password is missing or incorrect.");
+                            showAlertDialog(context, "Invalid credentials.");
+                          } else {
+                            if (context.mounted) {
+                              showAlertDialog(context,
+                                  "Could not log in. Please try again.");
+                            }
+
+                            log(e.toString());
                           }
                         }
                       }
