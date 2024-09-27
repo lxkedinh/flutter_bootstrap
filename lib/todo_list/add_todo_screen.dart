@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bootstrap/todo_list/todo_list_model.dart';
+import 'package:flutter_bootstrap/todo_list/todo_list_provider.dart';
 import 'package:provider/provider.dart';
 
 class AddTodoScreen extends StatefulWidget {
@@ -10,18 +10,21 @@ class AddTodoScreen extends StatefulWidget {
 }
 
 class _AddTodoScreenState extends State<AddTodoScreen> {
-  final formController = TextEditingController();
+  final todoController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    formController.dispose();
+    todoController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+        body: Form(
+      key: _formKey,
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -31,24 +34,35 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                   style: Theme.of(context).textTheme.displayMedium)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            child: TextField(
-              controller: formController,
+            child: TextFormField(
+              controller: todoController,
               decoration: const InputDecoration(
                 border: UnderlineInputBorder(),
                 labelText: 'New Todo',
               ),
+              validator: (todo) {
+                if (todo == null || todo == "") {
+                  return "Todo cannot be empty.";
+                }
+
+                return null;
+              },
             ),
           ),
           FilledButton(
             onPressed: () {
-              Provider.of<TodoListModel>(context, listen: false)
-                  .add(formController.text);
-              Navigator.pop(context);
+              if (_formKey.currentState!.validate()) {
+                Provider.of<TodoListProvider>(context, listen: false)
+                    .add(todoController.text);
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(const SnackBar(content: Text("Todo added")));
+              }
             },
             child: const Text("Add Todo"),
           ),
         ],
       ),
-    );
+    ));
   }
 }
