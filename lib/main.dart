@@ -16,10 +16,11 @@ void main() async {
 
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(
-        create: (context) => TodoListProvider(),
-      ),
       ChangeNotifierProvider(create: (context) => AuthProvider()),
+      ChangeNotifierProxyProvider<AuthProvider, TodoListProvider>(
+        create: (context) => TodoListProvider(),
+        update: (_, auth, __) => TodoListProvider(auth),
+      ),
     ],
     child: const MyApp(),
   ));
