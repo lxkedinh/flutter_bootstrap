@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bootstrap/auth/auth_provider.dart';
 import 'package:flutter_bootstrap/todo_list/todo_list_widget.dart';
+import 'package:provider/provider.dart';
 
 import 'add_todo_screen.dart';
 
@@ -18,11 +20,26 @@ class _TodoListScreenState extends State<TodoListScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                margin: const EdgeInsets.only(top: 40.0),
+                child: TextButton(
+                  onPressed: () =>
+                      Provider.of<AuthProvider>(context, listen: false)
+                          .signOut(),
+                  style: TextButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.error),
+                  child: const Text("Sign Out"),
+                ),
+              )),
           Container(
               margin: const EdgeInsets.only(top: 80.0),
               child: Text("Todo List",
-                  style: Theme.of(context).textTheme.displayMedium)),
-          Expanded(child: TodoListWidget()),
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      ))),
+          const Expanded(child: TodoListWidget()),
         ],
       ),
       floatingActionButton: FloatingActionButton(

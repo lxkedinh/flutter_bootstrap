@@ -1,7 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
+import 'package:flutter_bootstrap/auth/auth_provider.dart';
 import 'package:flutter_bootstrap/dialogs.dart';
-import 'package:flutter_bootstrap/todo_list/todo_list_screen.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -87,18 +88,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       try {
-                        final credential = await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                                email: emailController.text,
-                                password: passwordController.text);
+                        await Provider.of<AuthProvider>(context, listen: false)
+                            .signUp(
+                                emailController.text, passwordController.text);
 
-                        showAlertDialog(
-                            context, "Account successfully created!");
+                        if (context.mounted) {
+                          showAlertDialog(
+                              context, "Account successfully created!");
+                        }
                       } on FirebaseAuthException catch (e) {
-                        if (e.code == "weak-password") {
+                        if (e.code == "weak-password" && context.mounted) {
                           showAlertDialog(
                               context, "Your password is too weak.");
-                        } else if (e.code == "email-already-in-use") {
+                        } else if (e.code == "email-already-in-use" &&
+                            context.mounted) {
                           showAlertDialog(
                               context, "The email is already in use.");
                         }
@@ -111,18 +114,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         try {
-                          final credential = await FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                                  email: emailController.text,
-                                  password: passwordController.text);
-
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const TodoListScreen()));
+                          await Provider.of<AuthProvider>(context,
+                                  listen: false)
+                              .signIn(emailController.text,
+                                  passwordController.text);
                         } on FirebaseAuthException catch (e) {
-                          if (e.code == "user-not-found") {
+                          if (e.code == "user-not-found" && context.mounted) {
                             showAlertDialog(context,
                                 "There is no account with that email.");
-                          } else if (e.code == "wrong-password") {
+                          } else if (e.code == "wrong-password" &&
+                              context.mounted) {
                             showAlertDialog(
                                 context, "Password is missing or incorrect.");
                           }
