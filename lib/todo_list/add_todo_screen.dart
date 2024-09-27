@@ -55,8 +55,8 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                 Provider.of<TodoListProvider>(context, listen: false)
                     .add(todoController.text);
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(const SnackBar(content: Text("Todo added")));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text("Todo added"), duration: Durations.long4));
               }
             },
             child: const Text("Add Todo"),

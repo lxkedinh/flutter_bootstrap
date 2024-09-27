@@ -13,29 +13,24 @@ class TodoListItem extends StatefulWidget {
 }
 
 class _TodoListItemState extends State<TodoListItem> {
-  bool _completed = false;
-
   @override
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
         Checkbox(
-          value: _completed,
+          value: false,
           onChanged: (bool? value) {
-            setState(() => _completed = value!);
             Provider.of<TodoListProvider>(context, listen: false)
                 .delete(widget.task);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Todo \"${widget.task} completed\""),
+              duration: Durations.long4,
+            ));
           },
         ),
         Expanded(
           child: Text(
             widget.task,
-            style: _completed
-                ? const TextStyle(
-                    decoration: TextDecoration.lineThrough,
-                    color: Colors.black45,
-                    decorationColor: Colors.black45)
-                : const TextStyle(decoration: TextDecoration.none),
           ),
         ),
         Container(

@@ -53,8 +53,10 @@ class _EditTodoScreenState extends State<EditTodoScreen> {
                 Provider.of<TodoListProvider>(context, listen: false)
                     .edit(widget.todo, newTodoController.text);
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(const SnackBar(content: Text("Todo edited")));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Todo edited"),
+                  duration: Durations.long4,
+                ));
               }
             },
             child: const Text("Edit Todo"),
