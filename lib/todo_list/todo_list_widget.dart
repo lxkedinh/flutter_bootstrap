@@ -17,7 +17,7 @@ class TodoListWidget extends StatelessWidget {
             AsyncSnapshot<DocumentSnapshot<TodoList>> snapshot) {
           if (snapshot.hasError) {
             return Text(
-              "Something went wrong",
+              "Something went wrong loading todos",
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
