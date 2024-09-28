@@ -106,6 +106,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             context.mounted) {
                           showAlertDialog(
                               context, "The email is already in use.");
+                        } else {
+                          if (context.mounted) {
+                            showAlertDialog(context,
+                                "Could not Sign up. Please try again.");
+                          }
+
+                          log(e.toString());
                         }
                       }
                     }
